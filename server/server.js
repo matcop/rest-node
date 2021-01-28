@@ -34,7 +34,7 @@ app.post('/usuario', function (req, res) {
     });
   }
 
-  });
+});
 
 
 
