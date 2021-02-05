@@ -10,6 +10,22 @@ process.env.PORT=process.env.PORT || 3000;
 //===========================================
 process.env.NODE_ENV=process.env.NODE_ENV || 'dev'
 
+//====================================
+//  SEMILLA DE AUTENTIFICACION
+//====================================
+process.env.SEED=process.env.SEED||'secret-seed-desarrollo';
+
+
+//====================================
+//  VENCIMIENTO DEL TOKEN
+//====================================
+//60 segundos
+//60 minutos
+//24 horas
+//30 dias
+process.env.CADUCIDAD_TOKEN=60 * 60 * 24 * 30;
+
+
 
 
 //====================================
@@ -17,12 +33,12 @@ process.env.NODE_ENV=process.env.NODE_ENV || 'dev'
 //====================================
 let urlDB;
 
-// if(process.env.NODE_ENV==='dev'){
-//   urlDB='mongodb://localhost:27017/cafe';
-// }else{
+ if(process.env.NODE_ENV==='dev'){
+   urlDB='mongodb://localhost:27017/cafe';
+}else{
   //urlDB='mongodb://db_user_matcop:rXLOp2IhGTYI832E@cluster0.idhft.mongodb.net/cafe';
   urlDB=process.env.MONGO_URI;
-//}
+}
 
 process.env.URLDB=urlDB;
 

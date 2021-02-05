@@ -6,7 +6,11 @@ const mongoose = require('mongoose');
 
 const app = express()
 
-app.use(require('./routes/usuario'));
+//app.use(require('./routes/usuario'));
+//app.use(require('./routes/login'));
+//configuracion global de rutas
+app.use(require('./routes/index'));
+
 const bodyParser = require('body-parser')
 
 //app.use indica que son midlewars

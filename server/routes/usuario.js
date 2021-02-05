@@ -4,7 +4,7 @@ const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
 const bodyParser = require('body-parser');
-//const usuario = require('../models/usuario');
+const {verificaToken, verificaAdmin_Role }=require('../middlewares/autenticacion');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,7 +13,8 @@ app.get('/', function (req, res) {
   res.json('inicio - home')
 })
 
-app.get('/usuario', function (req, res) {
+
+  app.get('/usuario',verificaToken,  (req, res)=> {
   //res.json('get usuario local')
 
   let desde = req.query.desde || 0;
@@ -24,8 +25,7 @@ app.get('/usuario', function (req, res) {
   let soloActivos={
     estado:true
   }
-  //Usuario.find({google:true}) //para la busqueda personalizada
-  //Usuario.find({estado:true}, 'nombre email role estado')  //para filtrar lo que se muestra.
+  
   Usuario.find(soloActivos, 'nombre email role estado')  //para filtrar lo que se muestra.
     .skip(desde)
     .limit(limitexPagina)
@@ -49,9 +49,9 @@ app.get('/usuario', function (req, res) {
     });
 
 
-})
+});
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario',[verificaToken,verificaAdmin_Role], function (req, res) {
 
   const body = JSON.parse(JSON.stringify(req.body));
 
@@ -87,7 +87,7 @@ app.post('/usuario', function (req, res) {
 //para la actualizacion
 //para filtrar que valores se podran actualizar usaremos 
 //la propiedad pick del paquete underscore.
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res) {
   let id = req.params.id;
   let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -110,7 +110,7 @@ app.put('/usuario/:id', function (req, res) {
 
 
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res) {
 
   let id = req.params.id;
   let estado={'estado':false};
