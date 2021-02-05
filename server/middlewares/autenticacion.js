@@ -30,8 +30,9 @@ let verificaToken = (req, res, next) => {
 
 let verificaAdmin_Role = (req, res, next) => {
   
-  let usuario = req.usuario;
-  if (usuario === "ADMIN_ROLE") {
+ // let usuario = req.usuario;
+ let usuario =jwt.decode(req.get('token'));
+ if (usuario.usuario.role === "ADMIN_ROLE") {
     next();
    // return;
   } else {
