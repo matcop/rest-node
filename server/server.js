@@ -2,6 +2,9 @@ require('./config/config')
 const express = require('express');
 const mongoose = require('mongoose');
 
+//parte de la conf para acceder a public folder
+const path=require('path');
+
 
 
 const app = express()
@@ -12,6 +15,10 @@ const app = express()
 app.use(require('./routes/index'));
 
 const bodyParser = require('body-parser')
+
+//habilitar el folder PUblic
+
+app.use(express.static(path.resolve(__dirname,'..//public/')));
 
 //app.use indica que son midlewars
 // parse application/x-www-form-urlencoded

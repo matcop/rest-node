@@ -4,17 +4,17 @@ const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
 const bodyParser = require('body-parser');
-const {verificaToken, verificaAdmin_Role }=require('../middlewares/autenticacion');
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', function (req, res) {
-  res.json('inicio - home')
-})
+// app.get('/', function (req, res) {
+//   res.json('inicio - home')
+// })
 
 
-  app.get('/usuario',verificaToken,  (req, res)=> {
+app.get('/usuario', verificaToken, (req, res) => {
   //res.json('get usuario local')
 
   let desde = req.query.desde || 0;
@@ -22,10 +22,10 @@ app.get('/', function (req, res) {
   let limitexPagina = req.query.limite || 5;
   limitexPagina = Number(limitexPagina);
 
-  let soloActivos={
-    estado:true
+  let soloActivos = {
+    estado: true
   }
-  
+
   Usuario.find(soloActivos, 'nombre email role estado')  //para filtrar lo que se muestra.
     .skip(desde)
     .limit(limitexPagina)
@@ -51,7 +51,7 @@ app.get('/', function (req, res) {
 
 });
 
-app.post('/usuario',[verificaToken,verificaAdmin_Role], function (req, res) {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function (req, res) {
 
   const body = JSON.parse(JSON.stringify(req.body));
 
@@ -87,7 +87,7 @@ app.post('/usuario',[verificaToken,verificaAdmin_Role], function (req, res) {
 //para la actualizacion
 //para filtrar que valores se podran actualizar usaremos 
 //la propiedad pick del paquete underscore.
-app.put('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function (req, res) {
   let id = req.params.id;
   let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -110,13 +110,13 @@ app.put('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res) {
 
 
 
-app.delete('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function (req, res) {
 
   let id = req.params.id;
-  let estado={'estado':false};
+  let estado = { 'estado': false };
   //let cambiaestado={estado:false}; asi lo escribio fernando
 
-  Usuario.findByIdAndUpdate(id,estado,{new:true}, (err, usuarioBorrado) => {
+  Usuario.findByIdAndUpdate(id, estado, { new: true }, (err, usuarioBorrado) => {
     if (err) {
       return res.status(400).json({
         ok: false,
@@ -125,14 +125,14 @@ app.delete('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res
     };
 
     //if(usuarioBorrado===null)el if de abajo es la vrs. simple
-    if(!usuarioBorrado){
-    return res.status(400).json({
-      ok:false,
-      err:{
-        message:'usuario no encontrado'
-      }
-    });
-  }
+    if (!usuarioBorrado) {
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: 'usuario no encontrado'
+        }
+      });
+    }
 
 
     res.json({
@@ -142,6 +142,15 @@ app.delete('/usuario/:id',[verificaToken,verificaAdmin_Role], function (req, res
 
   });
 
-})
+});
+
+
+app.post('/google', (req, res) => {
+  let token=req.body;
+  res.json({
+    //body:req.body,
+    token
+  });
+});
 
 module.exports = app;
